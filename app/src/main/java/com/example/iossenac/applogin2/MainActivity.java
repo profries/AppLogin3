@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    public final static int LOGIN_REQUEST = 10;
 
     private List<Usuario> listaUsuarios;
     @Override
@@ -64,9 +65,23 @@ public class MainActivity extends AppCompatActivity {
 
     private void abrirTelaBemVindo(Usuario u) {
         Intent it = new Intent(this, BemVindoActivity.class);
-        it.putExtra("nomeCompleto",u.getNomeCompleto());
+        it.putExtra("usuario",u);
+        it.putExtra("indice",listaUsuarios.indexOf(u));
+        startActivityForResult(it,LOGIN_REQUEST);
+    }
 
-        startActivity(it);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == LOGIN_REQUEST){
+
+            if(resultCode == RESULT_OK){
+                //Vem da Activity BemVindoActivity
+                Usuario user = (Usuario) data.getSerializableExtra("user");
+                int index = data.getIntExtra("index",0);
+                listaUsuarios.set(index,user);
+            }
+
+        }
 
     }
 
